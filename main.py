@@ -1,5 +1,3 @@
-# Mise à jour pour forcer Render
-
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -212,7 +210,7 @@ def get_positions():
                 "+/- Nette (EUR)": 420,
                 "+/- (%)": 10
             },
-             {
+            {
                 "Compte": "CTO",
                 "Symbole": "ISHARES EUROST",
                 "ISIN": "IE00B1FZS913",
@@ -228,6 +226,23 @@ def get_positions():
                 "% 1J": -0.4,
                 "+/- Nette (EUR)": 400,
                 "+/- (%)": 8
+            },
+            {
+                "Compte": "CTO",
+                "Symbole": "TOTAL:xpar",
+                "ISIN": "FR0000120271",
+                "Instruments": "TotalEnergies",
+                "Devise": "EUR",
+                "Type d'actif": "Action",
+                "Prix entrée": 50,
+                "Prix revient": 51,
+                "Prix actuel": 52,
+                "Date de valeur": "2023-09-12",
+                "Quantité": 100,
+                "Exposition (EUR)": 5000,
+                "% 1J": 0.4,
+                "+/- Nette (EUR)": 100,
+                "+/- (%)": 2
             }
         ]
     }
