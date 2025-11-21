@@ -2,11 +2,15 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
+@app.get("/")
+def root():
+    return {"message": "API Saxo-Richard en ligne. Utilise /positions pour voir les données."}
+
 @app.get("/positions")
 def get_positions():
     return {
         "positions": [
-            {
+{
                 "Compte": "PEA",
                 "Symbole": "AIRBUS:xpar",
                 "ISIN": "FR0000120045",
