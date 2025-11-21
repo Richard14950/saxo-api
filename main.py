@@ -1,57 +1,219 @@
-# Ce code définit une API FastAPI avec trois routes :
-# - /ping : vérifie que le serveur est en ligne
-# - /prix : renvoie un prix fictif pour un ISIN donné
-# - /positions : renvoie une liste de positions formatées pour Google Sheets
-
 from fastapi import FastAPI
 
 app = FastAPI()
 
-@app.get("/ping")
-def ping():
-    return {"status": "ok", "message": "Saxo_Richard est en ligne"}
-
-@app.get("/prix")
-def get_prix(isin: str):
-    return {"isin": isin, "prix": "123.45", "source": "fictif"}
-
 @app.get("/positions")
 def get_positions():
-    positions = [
-        {
-            "Compte": "CTO",
-            "Symbole": "IPSOS:xpar",
-            "ISIN": "FR0000073298",
-            "Instruments": "Ipsos",
-            "Devise": "EUR",
-            "Type d'actif": "Actions",
-            "Prix entrée": 52.05,
-            "Prix revient": 51.05,
-            "Prix actuel": 32.24,
-            "Date de valeur": "2025-11-14",
-            "Quantité": 3,
-            "Exposition (EUR)": 97,
-            "% 1J": -1.23,
-            "+/- Nette (EUR)": -61.75,
-            "+/- (%)": -36.85
-        },
-        {
-            "Compte": "CTO",
-            "Symbole": "CHIP:xpar",
-            "ISIN": "LU1900066033",
-            "Instruments": "Amundi MSCI Semiconductors UCITS ETF Acc",
-            "Devise": "EUR",
-            "Type d'actif": "ETF",
-            "Prix entrée": 56.03,
-            "Prix revient": 55.49,
-            "Prix actuel": 68.9,
-            "Date de valeur": "2025-11-14",
-            "Quantité": 15,
-            "Exposition (EUR)": 1034,
-            "% 1J": -3.64,
-            "+/- Nette (EUR)": 191.05,
-            "+/- (%)": 24.15
-        }
-    ]
-    return {"positions": positions}
-
+    return {
+        "positions": [
+            {
+                "Compte": "PEA",
+                "Symbole": "AIRBUS:xpar",
+                "ISIN": "FR0000120045",
+                "Instruments": "Airbus",
+                "Devise": "EUR",
+                "Type d'actif": "Action",
+                "Prix entrée": 120,
+                "Prix revient": 118,
+                "Prix actuel": 132,
+                "Date de valeur": "2023-05-12",
+                "Quantité": 50,
+                "Exposition (EUR)": 6000,
+                "% 1J": 0.8,
+                "+/- Nette (EUR)": 600,
+                "+/- (%)": 10
+            },
+            {
+                "Compte": "PEA",
+                "Symbole": "DANONE:xpar",
+                "ISIN": "FR0000120644",
+                "Instruments": "Danone",
+                "Devise": "EUR",
+                "Type d'actif": "Action",
+                "Prix entrée": 55,
+                "Prix revient": 56,
+                "Prix actuel": 62,
+                "Date de valeur": "2024-01-20",
+                "Quantité": 100,
+                "Exposition (EUR)": 5500,
+                "% 1J": -0.5,
+                "+/- Nette (EUR)": 700,
+                "+/- (%)": 12.7
+            },
+            {
+                "Compte": "PEA",
+                "Symbole": "LVMH:xpar",
+                "ISIN": "FR0000121014",
+                "Instruments": "LVMH",
+                "Devise": "EUR",
+                "Type d'actif": "Action",
+                "Prix entrée": 720,
+                "Prix revient": 715,
+                "Prix actuel": 780,
+                "Date de valeur": "2022-09-15",
+                "Quantité": 10,
+                "Exposition (EUR)": 7200,
+                "% 1J": 1.2,
+                "+/- Nette (EUR)": 600,
+                "+/- (%)": 8.4
+            },
+            {
+                "Compte": "PEA",
+                "Symbole": "AMUNDI ETF CAC",
+                "ISIN": "FR0013412285",
+                "Instruments": "Amundi ETF CAC",
+                "Devise": "EUR",
+                "Type d'actif": "ETF",
+                "Prix entrée": 25,
+                "Prix revient": 25.5,
+                "Prix actuel": 28,
+                "Date de valeur": "2023-11-01",
+                "Quantité": 200,
+                "Exposition (EUR)": 5000,
+                "% 1J": 0.6,
+                "+/- Nette (EUR)": 500,
+                "+/- (%)": 10
+            },
+            {
+                "Compte": "PEA",
+                "Symbole": "LYXOR MSCI EM",
+                "ISIN": "FR0010429068",
+                "Instruments": "Lyxor MSCI EM",
+                "Devise": "EUR",
+                "Type d'actif": "ETF",
+                "Prix entrée": 15,
+                "Prix revient": 15.2,
+                "Prix actuel": 17,
+                "Date de valeur": "2024-03-10",
+                "Quantité": 300,
+                "Exposition (EUR)": 4500,
+                "% 1J": -0.3,
+                "+/- Nette (EUR)": 540,
+                "+/- (%)": 12
+            },
+            {
+                "Compte": "PEA",
+                "Symbole": "ISHARES S&P500",
+                "ISIN": "IE00B5BMR087",
+                "Instruments": "iShares S&P500",
+                "Devise": "USD",
+                "Type d'actif": "ETF",
+                "Prix entrée": 400,
+                "Prix revient": 402,
+                "Prix actuel": 440,
+                "Date de valeur": "2023-07-07",
+                "Quantité": 5,
+                "Exposition (EUR)": 2000,
+                "% 1J": 0.9,
+                "+/- Nette (EUR)": 200,
+                "+/- (%)": 10
+            },
+            {
+                "Compte": "PEA",
+                "Symbole": "TOTAL:xpar",
+                "ISIN": "FR0000120271",
+                "Instruments": "TotalEnergies",
+                "Devise": "EUR",
+                "Type d'actif": "Action",
+                "Prix entrée": 48,
+                "Prix revient": 49,
+                "Prix actuel": 52,
+                "Date de valeur": "2024-06-01",
+                "Quantité": 80,
+                "Exposition (EUR)": 3840,
+                "% 1J": 0.4,
+                "+/- Nette (EUR)": 240,
+                "+/- (%)": 6.25
+            },
+            {
+                "Compte": "CTO",
+                "Symbole": "BNP:xpar",
+                "ISIN": "FR0000131104",
+                "Instruments": "BNP Paribas",
+                "Devise": "EUR",
+                "Type d'actif": "Action",
+                "Prix entrée": 60,
+                "Prix revient": 61,
+                "Prix actuel": 68,
+                "Date de valeur": "2023-02-18",
+                "Quantité": 70,
+                "Exposition (EUR)": 4200,
+                "% 1J": 0.7,
+                "+/- Nette (EUR)": 490,
+                "+/- (%)": 11.6
+            },
+            {
+                "Compte": "CTO",
+                "Symbole": "SAFRAN:xpar",
+                "ISIN": "FR0000073272",
+                "Instruments": "Safran",
+                "Devise": "EUR",
+                "Type d'actif": "Action",
+                "Prix entrée": 140,
+                "Prix revient": 138,
+                "Prix actuel": 155,
+                "Date de valeur": "2022-12-10",
+                "Quantité": 30,
+                "Exposition (EUR)": 4200,
+                "% 1J": 1.1,
+                "+/- Nette (EUR)": 450,
+                "+/- (%)": 10.7
+            },
+            {
+                "Compte": "CTO",
+                "Symbole": "MICHELIN:xpar",
+                "ISIN": "FR0000121261",
+                "Instruments": "Michelin",
+                "Devise": "EUR",
+                "Type d'actif": "Action",
+                "Prix entrée": 95,
+                "Prix revient": 96,
+                "Prix actuel": 102,
+                "Date de valeur": "2024-04-05",
+                "Quantité": 40,
+                "Exposition (EUR)": 3800,
+                "% 1J": -0.2,
+                "+/- Nette (EUR)": 280,
+                "+/- (%)": 7.4
+            },
+            {
+                "Compte": "CTO",
+                "Symbole": "AMUNDI ETF MSCI",
+                "ISIN": "FR0010688192",
+                "Instruments": "Amundi MSCI Eur",
+                "Devise": "EUR",
+                "Type d'actif": "ETF",
+                "Prix entrée": 30,
+                "Prix revient": 31,
+                "Prix actuel": 34,
+                "Date de valeur": "2023-08-22",
+                "Quantité": 150,
+                "Exposition (EUR)": 4500,
+                "% 1J": 0.5,
+                "+/- Nette (EUR)": 450,
+                "+/- (%)": 10
+            },
+            {
+                "Compte": "CTO",
+                "Symbole": "LYXOR NASDAQ",
+                "ISIN": "FR0010342592",
+                "Instruments": "Lyxor Nasdaq100",
+                "Devise": "EUR",
+                "Type d'actif": "ETF",
+                "Prix entrée": 70,
+                "Prix revient": 71,
+                "Prix actuel": 78,
+                "Date de valeur": "2024-02-14",
+                "Quantité": 60,
+                "Exposition (EUR)": 4200,
+                "% 1J": 0.8,
+                "+/- Nette (EUR)": 420,
+                "+/- (%)": 10
+            },
+            {
+                "Compte": "CTO",
+                "Symbole": "ISHARES EUROST",
+                "ISIN": "IE00B1FZS913",
+                "Instruments": "iShares EuroStx",
+                "Devise": "EUR",
+                "Type d'actif": "ETF",
