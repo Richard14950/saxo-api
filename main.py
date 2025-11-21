@@ -210,10 +210,22 @@ def get_positions():
                 "+/- Nette (EUR)": 420,
                 "+/- (%)": 10
             },
-            {
+             {
                 "Compte": "CTO",
                 "Symbole": "ISHARES EUROST",
                 "ISIN": "IE00B1FZS913",
                 "Instruments": "iShares EuroStx",
                 "Devise": "EUR",
                 "Type d'actif": "ETF",
+                "Prix entrée": 25,
+                "Prix revient": 26,
+                "Prix actuel": 28,
+                "Date de valeur": "2023-10-30",
+                "Quantité": 200,
+                "Exposition (EUR)": 5000,
+                "% 1J": -0.4,
+                "+/- Nette (EUR)": 400,
+                "+/- (%)": 8
+            }
+        ]
+    }
