@@ -44,4 +44,4 @@ def get_account_info(request: Request):
     if response.status_code == 200:
         return response.json()
     else:
-        return {"error": response
+        return {"error": response}
