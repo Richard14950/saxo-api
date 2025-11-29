@@ -1,8 +1,4 @@
 # MC_ProxySaxo.py — proxy Saxo compatible Apps Script via Render
-# Expose :
-#   - GET /           → healthcheck
-#   - GET /token      → retourne { "access_token": "..." }
-#   - GET /api/{path} → relai vers Saxo avec Bearer token
 
 import os
 import requests
@@ -11,12 +7,10 @@ from fastapi.responses import JSONResponse
 
 app = FastAPI(title="MC_ProxySaxo")
 
-# 🔐 Variables d'environnement (Render → Settings → Environment)
 SAXO_CLIENT_ID     = os.getenv("SAXO_CLIENT_ID")
 SAXO_CLIENT_SECRET = os.getenv("SAXO_CLIENT_SECRET")
 SAXO_REDIRECT_URI  = os.getenv("SAXO_REDIRECT_URI", "https://localhost")
 
-# 🌐 Endpoints officiels Saxo
 TOKEN_URL = "https://openapi.saxobank.com/authentication/v1/token"
 BASE_URL  = "https://openapi.saxobank.com"
 
@@ -40,7 +34,6 @@ def get_token():
 
 @app.get("/api/{path:path}")
 def proxy_api(path: str):
-    # 1) Récupère un token
     token_resp = get_token()
     if isinstance(token_resp, JSONResponse) and token_resp.status_code >= 400:
         return token_resp
@@ -55,7 +48,6 @@ def proxy_api(path: str):
     if not access_token:
         return JSONResponse(status_code=401, content={"error": "Token absent"})
 
-    # 2) Relai GET vers Saxo
     url = f"{BASE_URL}/{path.lstrip('/')}"
     headers = {"Authorization": f"Bearer {access_token}"}
 
