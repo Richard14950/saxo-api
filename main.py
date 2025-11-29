@@ -1,63 +1,46 @@
-import os
-import json
+from fastapi import FastAPI, Request
 import requests
-from fastapi import FastAPI, Response
-from fastapi.responses import JSONResponse
+import os
 
-app = FastAPI(title="MC_ProxySaxo")
-
-SAXO_CLIENT_ID     = os.getenv("SAXO_CLIENT_ID")
-SAXO_CLIENT_SECRET = os.getenv("SAXO_CLIENT_SECRET")
-SAXO_REDIRECT_URI  = os.getenv("SAXO_REDIRECT_URI", "https://localhost")
-
-TOKEN_URL = "https://openapi.saxobank.com/authentication/v1/token"
-BASE_URL  = "https://openapi.saxobank.com"
-
+app = FastAPI()
 
 @app.get("/")
 def root():
     return {"status": "ok", "service": "MC_ProxySaxo"}
 
-
-def fetch_token():
-    """Fonction interne pour récupérer un access_token depuis Saxo"""
-    payload = {
-        "grant_type": "client_credentials",
-        "client_id": SAXO_CLIENT_ID,
-        "client_secret": SAXO_CLIENT_SECRET,
-        "redirect_uri": SAXO_REDIRECT_URI
-    }
-    try:
-        r = requests.post(TOKEN_URL, data=payload, timeout=20)
-        if r.status_code != 200:
-            return None, r.status_code, r.text
-        token_data = r.json()
-        return token_data.get("access_token"), 200, None
-    except Exception as e:
-        return None, 502, str(e)
-
-
 @app.get("/token")
 def get_token():
-    access_token, status, error = fetch_token()
-    if not access_token:
-        return JSONResponse(status_code=status, content={"error": error or "Token fetch failed"})
-    return {"access_token": access_token}
+    client_id = os.getenv("SAXO_CLIENT_ID")
+    client_secret = os.getenv("SAXO_CLIENT_SECRET")
+    redirect_uri = os.getenv("SAXO_REDIRECT_URI")
 
+    token_url = "https://www.saxo.com/oauth2/token"
+    payload = {
+        "grant_type": "client_credentials",
+        "client_id": client_id,
+        "client_secret": client_secret,
+        "redirect_uri": redirect_uri
+    }
 
-@app.get("/api/{path:path}")
-def proxy_api(path: str):
-    access_token, status, error = fetch_token()
-    if not access_token:
-        return JSONResponse(status_code=status, content={"error": error or "Token fetch failed"})
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.post(token_url, data=payload, headers=headers)
 
-    url = f"{BASE_URL}/{path.lstrip('/')}"
-    headers = {"Authorization": f"Bearer {access_token}"}
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {"error": response.status_code, "details": response.text}
 
-    try:
-        r = requests.get(url, headers=headers, timeout=20)
-        return Response(content=r.content,
-                        media_type=r.headers.get("Content-Type", "application/json"),
-                        status_code=r.status_code)
-    except Exception as e:
-        return JSONResponse(status_code=502, content={"error": f"Proxy API failed: {str(e)}"})
+@app.get("/api/openapi/port/v1/accounts/me")
+def get_account_info(request: Request):
+    auth_header = request.headers.get("Authorization")
+    if not auth_header:
+        return {"error": "Missing Authorization header"}
+
+    url = "https://gateway.saxobank.com/openapi/port/v1/accounts/me"
+    headers = {"Authorization": auth_header}
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {"error": response
