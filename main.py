@@ -1,8 +1,7 @@
-# Trigger redeploy – commit léger pour forcer Railway à re-provisionner le domaine actuel
-
-from fastapi import FastAPI, Request
-import requests
+# Saxo OpenAPI sandbox – correction du domaine OAuth2 et payload
+from fastapi import FastAPI
 import os
+import requests
 
 app = FastAPI()
 
@@ -14,29 +13,38 @@ def root():
 def get_token():
     client_id = os.getenv("SAXO_CLIENT_ID")
     client_secret = os.getenv("SAXO_CLIENT_SECRET")
-    redirect_uri = os.getenv("SAXO_REDIRECT_URI")
+    # Optionnel selon tes besoins et configuration d’app
+    scope = os.getenv("SAXO_SCOPE", "read,trade")
 
-    if not client_id or not client_secret or not redirect_uri:
+    if not client_id or not client_secret:
         return {"error": "Missing environment variables"}
 
-    url = "https://sim.openbankingplatform.com/sim/openapi/token"
+    # Base sandbox OpenAPI (sim) – corriger ici si tu as une valeur spécifique fournie par Saxo
+    base = os.getenv("SAXO_BASE", "https://sim.openapi.saxobank.com")
+    url = f"{base}/oauth2/token"
+
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     data = {
         "grant_type": "client_credentials",
         "client_id": client_id,
         "client_secret": client_secret,
-        "redirect_uri": redirect_uri,
+        "scope": scope,
     }
 
     try:
-        response = requests.post(url, headers=headers, data=data)
-        if response.status_code == 200:
-            return response.json()
+        r = requests.post(url, headers=headers, data=data, timeout=20)
+        # Retourne le JSON ou détaille l’erreur
+        if r.headers.get("content-type", "").startswith("application/json"):
+            payload = r.json()
         else:
-            return {
-                "error": "Token request failed",
-                "status_code": response.status_code,
-                "details": response.text
-            }
+            payload = {"raw": r.text}
+
+        if r.status_code == 200:
+            return payload
+        return {
+            "error": "Token request failed",
+            "status_code": r.status_code,
+            "details": payload
+        }
     except Exception as e:
         return {"error": str(e)}
