@@ -1,3 +1,5 @@
+# Trigger redeploy – commit léger pour forcer Railway à re-provisionner le domaine
+
 from fastapi import FastAPI, Request
 import requests
 import os
@@ -31,7 +33,10 @@ def get_token():
         if response.status_code == 200:
             return response.json()
         else:
-            return {"error": f"Token request failed", "status_code": response.status_code, "details": response.text}
+            return {
+                "error": "Token request failed",
+                "status_code": response.status_code,
+                "details": response.text
+            }
     except Exception as e:
         return {"error": str(e)}
-
