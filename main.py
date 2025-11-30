@@ -1,4 +1,4 @@
-# Trigger redeploy – commit léger pour forcer Railway à re-provisionner le domaine
+# Trigger redeploy – commit léger pour forcer Railway à re-provisionner le domaine actuel
 
 from fastapi import FastAPI, Request
 import requests
