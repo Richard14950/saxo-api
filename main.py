@@ -1,4 +1,5 @@
-# Saxo OpenAPI sandbox – correction du domaine OAuth2 et payload
+# Saxo Proxy + Diagnostic IP – version complète et non destructive
+
 from fastapi import FastAPI
 import os
 import requests
@@ -13,13 +14,11 @@ def root():
 def get_token():
     client_id = os.getenv("SAXO_CLIENT_ID")
     client_secret = os.getenv("SAXO_CLIENT_SECRET")
-    # Optionnel selon tes besoins et configuration d’app
     scope = os.getenv("SAXO_SCOPE", "read,trade")
 
     if not client_id or not client_secret:
         return {"error": "Missing environment variables"}
 
-    # Base sandbox OpenAPI (sim) – corriger ici si tu as une valeur spécifique fournie par Saxo
     base = os.getenv("SAXO_BASE", "https://sim.openapi.saxobank.com")
     url = f"{base}/oauth2/token"
 
@@ -33,7 +32,6 @@ def get_token():
 
     try:
         r = requests.post(url, headers=headers, data=data, timeout=20)
-        # Retourne le JSON ou détaille l’erreur
         if r.headers.get("content-type", "").startswith("application/json"):
             payload = r.json()
         else:
@@ -46,5 +44,13 @@ def get_token():
             "status_code": r.status_code,
             "details": payload
         }
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/ip")
+def get_ip():
+    try:
+        r = requests.get("https://api.ipify.org?format=json", timeout=10)
+        return r.json()
     except Exception as e:
         return {"error": str(e)}
